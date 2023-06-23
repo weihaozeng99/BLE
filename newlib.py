@@ -27,5 +27,5 @@ async def run(name):
 loop = asyncio.get_event_loop()
 while 1:
     loop.run_until_complete(run(esp_name))
-    time.sleep(5)
+    time.sleep(10)
     loop.run_until_complete(run(esp_name))
