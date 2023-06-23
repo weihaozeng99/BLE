@@ -9,9 +9,9 @@ esp_name="Long name works now"
 esp_test_UUID="42c02b73-0b43-492e-8941-91a547a180f0"
 
 
-async def main():
+async def run(name):
     print("Finding device now\n")
-    devices = await BleakScanner.find_device_by_name(esp_name)
+    devices = await BleakScanner.find_device_by_name(name)
     print(devices.name)
     if devices != None:
         print("Connecting")
@@ -25,6 +25,6 @@ async def main():
         print("ERROR: No device was found!\n")
 
 loop = asyncio.get_event_loop()
-loop.run_until_complete(main())
+loop.run_until_complete(run(esp_name))
 time.sleep(5)
-loop.run_until_complete(main())
+loop.run_until_complete(run(esp_name))
