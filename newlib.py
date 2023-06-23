@@ -24,6 +24,7 @@ async def main():
     else:
         print("ERROR: No device was found!\n")
 
-while 1:
-    asyncio.run(main())
-    time.sleep(30)
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main())
+time.sleep(5)
+loop.run_until_complete(main())
