@@ -5,6 +5,10 @@ from argparse import ArgumentParser
 
 
 class AnyDevice(gatt.Device):
+    def device_discovered(self, device):
+        print("Discovered [%s] %s" % (device.mac_address, device.alias()))
+        if device.alias()=="Long name works now":
+            return device.mac_address
     def connect_succeeded(self):
         super().connect_succeeded()
         print("[%s] Connected" % (self.mac_address))
@@ -27,9 +31,9 @@ class AnyDevice(gatt.Device):
                 print("[%s]    Characteristic [%s]" % (self.mac_address, characteristic.uuid))
 
 
-arg_parser = ArgumentParser(description="GATT Connect Demo")
-arg_parser.add_argument('mac_address', help="MAC address of device to connect")
-args = arg_parser.parse_args()
+# arg_parser = ArgumentParser(description="GATT Connect Demo")
+# arg_parser.add_argument('mac_address', help="MAC address of device to connect")
+# args = arg_parser.parse_args()
 
 print("Connecting...")
 
