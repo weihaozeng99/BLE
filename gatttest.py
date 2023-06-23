@@ -35,7 +35,7 @@ print("Connecting...")
 
 manager = gatt.DeviceManager(adapter_name='hci0')
 
-device = AnyDevice(manager=manager, mac_address=args.mac_address)
+device = AnyDevice(manager=manager, mac_address="A0:B7:65:49:F8:52")
 device.connect()
 
 manager.run()
