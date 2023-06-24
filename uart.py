@@ -69,7 +69,8 @@ async def uart_terminal(esp_name):
 
 
 if __name__ == "__main__":
-    while 1:    
+    while 1:
+        time.sleep(1)    
         try:
             asyncio.run(uart_terminal(ESP_NAME))
         except asyncio.CancelledError:
