@@ -27,6 +27,9 @@ def sliced(data: bytes, n: int) -> Iterator[bytes]:
 async def uart_terminal(esp_name):
 
 
+    
+    scanner=BleakScanner()
+    scanner.start()
     device = await BleakScanner.find_device_by_name(esp_name)
     print(device.name)
 
@@ -48,6 +51,7 @@ async def uart_terminal(esp_name):
     #async with BleakClient(device, disconnected_callback=handle_disconnect) as client:
     async with BleakClient(device) as client:
         #print("connected")
+        scanner.stop()
         await client.start_notify(UART_TX_CHAR_UUID, handle_rx)
 
         print("Connected, start typing and press ENTER")
