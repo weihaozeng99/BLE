@@ -56,23 +56,24 @@ async def uart_terminal(esp_name):
         nus = client.services.get_service(UART_SERVICE_UUID)
         rx_char = nus.get_characteristic(UART_RX_CHAR_UUID)
 
+        # while True:
+        #     data = await loop.run_in_executor(None, sys.stdin.buffer.readline)
+
+        #     # data will be empty on EOF (e.g. CTRL+D on *nix)
+        #     if not data:
+        #         break
+
+        #     for s in sliced(data, rx_char.max_write_without_response_size):
+        #         await client.write_gatt_char(rx_char, s)
+
+        #     print("sent:", data)
+
+
+if __name__ == "__main__":  
         while True:
-            data = await loop.run_in_executor(None, sys.stdin.buffer.readline)
-
-            # data will be empty on EOF (e.g. CTRL+D on *nix)
-            if not data:
-                break
-
-            for s in sliced(data, rx_char.max_write_without_response_size):
-                await client.write_gatt_char(rx_char, s)
-
-            print("sent:", data)
-
-
-if __name__ == "__main__":
-        time.sleep(1)    
-        try:
-            asyncio.run(uart_terminal(ESP_NAME))
-        except asyncio.CancelledError:
-            # task is cancelled on disconnect, so we ignore this error
-            pass
+            time.sleep(5)
+            try:
+                asyncio.run(uart_terminal(ESP_NAME))
+            except asyncio.CancelledError:
+                # task is cancelled on disconnect, so we ignore this error
+                pass
