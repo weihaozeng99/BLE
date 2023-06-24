@@ -28,7 +28,7 @@ async def uart_terminal(esp_name):
 
 
     device = await BleakScanner.find_device_by_name(esp_name)
-    print(device.name)
+    #print(device.name)
 
     if device == None:
         print("no matching device found, you may need to edit match_nus_uuid().")
@@ -44,6 +44,7 @@ async def uart_terminal(esp_name):
         print("received:", data)
 
     async with BleakClient(device, disconnected_callback=handle_disconnect) as client:
+        print("connected")
         await client.start_notify(UART_TX_CHAR_UUID, handle_rx)
 
         print("Connected, start typing and press ENTER")
