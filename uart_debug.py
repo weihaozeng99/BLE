@@ -47,8 +47,8 @@ async def uart_terminal(esp_name):
 
 
    
-    #async with BleakClient(device, disconnected_callback=handle_disconnect) as client:
-    async with BleakClient(device) as client:
+    async with BleakClient(device, disconnected_callback=handle_disconnect,timeout=1000000) as client:
+    #async with BleakClient(device) as client:
         #print("connected")
         await client.start_notify(UART_TX_CHAR_UUID, handle_rx)
 
