@@ -49,8 +49,9 @@ async def uart_terminal(esp_name):
         #print("connected")
     client=BleakClient(device)
     #client.pair()
-    await client.connect()
     client.set_disconnected_callback(handle_disconnect)
+    await client.connect(timeout=100)
+    
     await client.start_notify(UART_TX_CHAR_UUID, handle_rx)
 
     print("Connected, start typing and press ENTER")
