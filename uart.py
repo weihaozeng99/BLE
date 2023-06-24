@@ -69,8 +69,9 @@ async def uart_terminal(esp_name):
 
 
 if __name__ == "__main__":
-    try:
-        asyncio.run(uart_terminal(ESP_NAME))
-    except asyncio.CancelledError:
-        # task is cancelled on disconnect, so we ignore this error
-        pass
+    while 1:    
+        try:
+            asyncio.run(uart_terminal(ESP_NAME))
+        except asyncio.CancelledError:
+            # task is cancelled on disconnect, so we ignore this error
+            pass
