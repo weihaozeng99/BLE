@@ -48,7 +48,7 @@ async def uart_terminal(esp_name):
     # async with BleakClient(device, disconnected_callback=handle_disconnect) as client:
         #print("connected")
     client=BleakClient(device)
-    client.pair()
+    #client.pair()
     await client.connect()
     client.set_disconnected_callback(handle_disconnect)
     await client.start_notify(UART_TX_CHAR_UUID, handle_rx)
@@ -70,7 +70,7 @@ async def uart_terminal(esp_name):
                 await client.write_gatt_char(rx_char, s)
 
             print("sent:", data)
-
+    client.disconnect()
 
 if __name__ == "__main__":
     try:
