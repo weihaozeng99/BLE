@@ -28,6 +28,7 @@ async def uart_terminal(esp_name):
 
 
     device = await BleakScanner.find_device_by_name(esp_name)
+    print(device.name)
 
     if device == None:
         print("no matching device found, you may need to edit match_nus_uuid().")
