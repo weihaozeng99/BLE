@@ -79,4 +79,4 @@ if __name__ == "__main__":
             except asyncio.CancelledError:
                 # task is cancelled on disconnect, so we ignore this error
                 pass
-            time.sleep(5)
+            time.sleep(3)
