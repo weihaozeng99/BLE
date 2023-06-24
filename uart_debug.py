@@ -47,8 +47,8 @@ async def uart_terminal(esp_name):
 
 
    
-    async with BleakClient(device, disconnected_callback=handle_disconnect) as client:
-    #async with BleakClient(device) as client:
+    #async with BleakClient(device, disconnected_callback=handle_disconnect) as client:
+    async with BleakClient(device) as client:
         #print("connected")
         await client.start_notify(UART_TX_CHAR_UUID, handle_rx)
 
@@ -76,7 +76,7 @@ if __name__ == "__main__":
             
             try:
                 asyncio.run(uart_terminal(ESP_NAME))
-            except asyncio.CancelledError:
+            except:
                 # task is cancelled on disconnect, so we ignore this error
                 pass
             time.sleep(3)
