@@ -8,7 +8,7 @@ from bleak.backends.characteristic import BleakGATTCharacteristic
 from bleak.backends.device import BLEDevice
 from bleak.backends.scanner import AdvertisementData
 
-ESP_NAME="UART Service"
+ESP_NAME="UART"
 
 UART_SERVICE_UUID = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E"
 UART_RX_CHAR_UUID = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E"
@@ -73,9 +73,10 @@ async def uart_terminal(esp_name):
 
 if __name__ == "__main__":  
         while True:
-            time.sleep(5)
+            
             try:
                 asyncio.run(uart_terminal(ESP_NAME))
             except asyncio.CancelledError:
                 # task is cancelled on disconnect, so we ignore this error
                 pass
+            time.sleep(5)
