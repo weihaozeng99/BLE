@@ -45,22 +45,18 @@ async def uart_terminal(esp_name):
 
 
    
-    # async with BleakClient(device, disconnected_callback=handle_disconnect) as client:
+    #async with BleakClient(device, disconnected_callback=handle_disconnect) as client:
+    async with BleakClient(device) as client:
         #print("connected")
-    client=BleakClient(device)
-    client.pair()
-    client.set_disconnected_callback(handle_disconnect)
-    await client.connect(timeout=100)
-    
-    await client.start_notify(UART_TX_CHAR_UUID, handle_rx)
+        await client.start_notify(UART_TX_CHAR_UUID, handle_rx)
 
-    print("Connected, start typing and press ENTER")
+        print("Connected, start typing and press ENTER")
 
-    loop = asyncio.get_running_loop()
-    nus = client.services.get_service(UART_SERVICE_UUID)
-    rx_char = nus.get_characteristic(UART_RX_CHAR_UUID)
+        loop = asyncio.get_running_loop()
+        nus = client.services.get_service(UART_SERVICE_UUID)
+        rx_char = nus.get_characteristic(UART_RX_CHAR_UUID)
 
-    while True:
+        while True:
             data = await loop.run_in_executor(None, sys.stdin.buffer.readline)
 
             # data will be empty on EOF (e.g. CTRL+D on *nix)
@@ -71,10 +67,11 @@ async def uart_terminal(esp_name):
                 await client.write_gatt_char(rx_char, s)
 
             print("sent:", data)
-    client.disconnect()
+
 
 if __name__ == "__main__":
     while 1:
+        time.sleep(1)    
         try:
             asyncio.run(uart_terminal(ESP_NAME))
         except asyncio.CancelledError:
