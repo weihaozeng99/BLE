@@ -43,8 +43,10 @@ async def uart_terminal(esp_name):
     def handle_rx(_: BleakGATTCharacteristic, data: bytearray):
         print("received:", data)
 
+
+    time.sleep(10)
     async with BleakClient(device, disconnected_callback=handle_disconnect) as client:
-        print("connected")
+        #print("connected")
         await client.start_notify(UART_TX_CHAR_UUID, handle_rx)
 
         print("Connected, start typing and press ENTER")
