@@ -1,5 +1,6 @@
 import asyncio
 import sys,time
+import os
 from itertools import count, takewhile
 from typing import Iterator
 
@@ -32,16 +33,22 @@ async def uart_terminal(esp_name):
 
     if device == None:
         print("no matching device found, you may need to edit match_nus_uuid().")
-        #sys.exit(1)
+        sys.exit(1)
 
 
     def handle_rx(_: BleakGATTCharacteristic, data: bytearray):
         print("received:", data)
 
+    def handle_disconnect(_: BleakClient):
+        print("Device was disconnected, goodbye.")
+        time.sleep(3)
+        # restart the whole program
+   
+        os.execl(sys.executable, sys.executable, *sys.argv)
 
    
-    #async with BleakClient(device, disconnected_callback=handle_disconnect) as client:
-    async with BleakClient(device) as client:
+    async with BleakClient(device, disconnected_callback=handle_disconnect) as client:
+    #async with BleakClient(device) as client:
         #print("connected")
         await client.start_notify(UART_TX_CHAR_UUID, handle_rx)
 
@@ -62,13 +69,15 @@ async def uart_terminal(esp_name):
                 await client.write_gatt_char(rx_char, s)
 
             print("sent:", data)
+        
 
 
 if __name__ == "__main__":
     while 1:
-        time.sleep(1)    
+        
         try:
             asyncio.run(uart_terminal(ESP_NAME))
         except :
             # task is cancelled on disconnect, so we ignore this error
             pass
+        time.sleep(3)   

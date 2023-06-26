@@ -1,4 +1,5 @@
 import asyncio
+import os
 import sys,time
 from itertools import count, takewhile
 from typing import Iterator
@@ -38,18 +39,30 @@ async def uart_terminal(esp_name):
 
     def handle_disconnect(_: BleakClient):
         print("Device was disconnected, goodbye.")
+        
         # cancelling all tasks effectively ends the program
         for task in asyncio.all_tasks():
             task.cancel()
+        
+
+        sys.exit(1)
+        
 
     def handle_rx(_: BleakGATTCharacteristic, data: bytearray):
         print("received:", data)
 
 
    
-    async with BleakClient(device, disconnected_callback=handle_disconnect,timeout=100000000) as client:
+    #async with BleakClient(device, disconnected_callback=handle_disconnect,timeout=100000000) as client:
     #async with BleakClient(device) as client:
         #print("connected")
+    client = BleakClient(device,handle_disconnect)
+    print('Connecting...')
+    await client.connect()
+    if not client.is_connected:
+        print('Failed to connect')
+    else:
+        #client.set_disconnected_callback(handle_disconnect)
         await client.start_notify(UART_TX_CHAR_UUID, handle_rx)
 
         print("Connected, start typing and press ENTER")
@@ -58,17 +71,17 @@ async def uart_terminal(esp_name):
         nus = client.services.get_service(UART_SERVICE_UUID)
         rx_char = nus.get_characteristic(UART_RX_CHAR_UUID)
 
-        # while True:
-        #     data = await loop.run_in_executor(None, sys.stdin.buffer.readline)
+        while True:
+            data = await loop.run_in_executor(None, sys.stdin.buffer.readline)
 
-        #     # data will be empty on EOF (e.g. CTRL+D on *nix)
-        #     if not data:
-        #         break
+                # data will be empty on EOF (e.g. CTRL+D on *nix)
+            if not data:
+                break
 
-        #     for s in sliced(data, rx_char.max_write_without_response_size):
-        #         await client.write_gatt_char(rx_char, s)
+            for s in sliced(data, rx_char.max_write_without_response_size):
+                await client.write_gatt_char(rx_char, s)
 
-        #     print("sent:", data)
+            print("sent:", data)
 
 
 if __name__ == "__main__":  
@@ -76,7 +89,7 @@ if __name__ == "__main__":
             
             try:
                 asyncio.run(uart_terminal(ESP_NAME))
-            except:
+            except :
                 # task is cancelled on disconnect, so we ignore this error
                 pass
             time.sleep(3)
