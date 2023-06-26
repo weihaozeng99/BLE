@@ -32,20 +32,16 @@ async def uart_terminal(esp_name):
 
     if device == None:
         print("no matching device found, you may need to edit match_nus_uuid().")
-        sys.exit(1)
+        #sys.exit(1)
 
-    def handle_disconnect(_: BleakClient):
-        print("Device was disconnected, goodbye.")
-        # cancelling all tasks effectively ends the program
-        for task in asyncio.all_tasks():
-            task.cancel()
 
     def handle_rx(_: BleakGATTCharacteristic, data: bytearray):
         print("received:", data)
 
 
    
-    async with BleakClient(device, disconnected_callback=handle_disconnect) as client:
+    #async with BleakClient(device, disconnected_callback=handle_disconnect) as client:
+    async with BleakClient(device) as client:
         #print("connected")
         await client.start_notify(UART_TX_CHAR_UUID, handle_rx)
 
@@ -73,6 +69,6 @@ if __name__ == "__main__":
         time.sleep(1)    
         try:
             asyncio.run(uart_terminal(ESP_NAME))
-        except asyncio.CancelledError:
+        except :
             # task is cancelled on disconnect, so we ignore this error
             pass
